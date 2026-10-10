@@ -19,6 +19,9 @@ func apply_performance_profile(profile: String, radius: int, density: float) -> 
 	active_profile = profile
 	chunk_load_radius = clampi(radius, 1, 2)
 	density_multiplier = clampf(density, 0.35, 1.0)
+	for old_chunk in loaded_chunks.values():
+		(old_chunk as Node3D).queue_free()
+	loaded_chunks.clear()
 	_refresh_chunks(true)
 
 func _process(_delta: float) -> void:
