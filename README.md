@@ -21,10 +21,22 @@ A lightweight first-person 3D puzzle game built with **Godot 4**.
 - **G** — flip gravity between floor and ceiling
 - **Esc** — release the mouse
 
+## Multiplayer direction: player-hosted rooms
+The planned multiplayer model is **listen-server / player-hosted**: the player who creates a room runs the match, and friends connect to that host. This avoids paying for a dedicated game server for every match.
+
+Important design notes:
+- The host must keep the game open while the room is running.
+- Hosting from a home network may require NAT traversal or a relay; a room code by itself does not make direct connections possible.
+- A small matchmaking/signalling service or relay may still be needed for reliable internet connections, and any free-tier provider can have limits.
+- The host should be authoritative for important game state so clients cannot freely decide puzzle outcomes.
+- Multiplayer is planned, not implemented yet. The current prototype is still single-player.
+
+See [the multiplayer design notes](docs/multiplayer-design.md).
+
 ## Roadmap
 1. Reliable single-player room and gravity puzzle
-2. Windows and browser builds
-3. Multiplayer room codes
+2. Windows build and a browser build investigation
+3. Player-hosted private multiplayer rooms
 4. Co-op and versus modes
 
 The first milestone is a working prototype; networking and extra reality powers come later.
