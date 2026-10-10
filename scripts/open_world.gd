@@ -3,7 +3,9 @@ extends Node3D
 # Procedural streamed world: the game only keeps a 3x3 area of chunks loaded.
 # Moving forever creates new regions from a deterministic coordinate-based seed.
 const CHUNK_SIZE: float = 120.0
-const LOAD_RADIUS: int = 1
+var chunk_load_radius: int = 1
+var density_multiplier: float = 0.8
+var active_profile: String = "Balanced"
 
 @onready var player: CharacterBody3D = $Player
 
@@ -11,6 +13,12 @@ var loaded_chunks: Dictionary = {}
 var current_chunk: Vector2i = Vector2i(999999, 999999)
 
 func _ready() -> void:
+	_refresh_chunks(true)
+
+func apply_performance_profile(profile: String, radius: int, density: float) -> void:
+	active_profile = profile
+	chunk_load_radius = clampi(radius, 1, 2)
+	density_multiplier = clampf(density, 0.35, 1.0)
 	_refresh_chunks(true)
 
 func _process(_delta: float) -> void:
@@ -24,8 +32,8 @@ func _chunk_for_position(position: Vector3) -> Vector2i:
 func _refresh_chunks(force: bool) -> void:
 	current_chunk = _chunk_for_position(player.global_position)
 	var wanted: Dictionary = {}
-	for z in range(current_chunk.y - LOAD_RADIUS, current_chunk.y + LOAD_RADIUS + 1):
-		for x in range(current_chunk.x - LOAD_RADIUS, current_chunk.x + LOAD_RADIUS + 1):
+	for z in range(current_chunk.y - chunk_load_radius, current_chunk.y + chunk_load_radius + 1):
+		for x in range(current_chunk.x - chunk_load_radius, current_chunk.x + chunk_load_radius + 1):
 			var coord := Vector2i(x, z)
 			wanted[coord] = true
 			if not loaded_chunks.has(coord):
@@ -65,7 +73,7 @@ func _build_city(chunk: Node3D, rng: RandomNumberGenerator) -> void:
 		Color(0.13, 0.19, 0.28), Color(0.18, 0.23, 0.32),
 		Color(0.23, 0.25, 0.34), Color(0.11, 0.16, 0.23)
 	]
-	for i in range(15):
+	for i in range(maxi(5, roundi(15.0 * density_multiplier))):
 		var x := rng.randf_range(-53.0, 53.0)
 		var z := rng.randf_range(-53.0, 53.0)
 		if absf(x) < 10.0 or absf(z) < 10.0:
@@ -80,7 +88,7 @@ func _build_city(chunk: Node3D, rng: RandomNumberGenerator) -> void:
 
 func _build_wildlands(chunk: Node3D, rng: RandomNumberGenerator) -> void:
 	_add_box(chunk, "WildlandGround", Vector3(0, -1, 0), Vector3(CHUNK_SIZE, 2, CHUNK_SIZE), Color(0.16, 0.31, 0.19))
-	for i in range(24):
+	for i in range(maxi(8, roundi(24.0 * density_multiplier))):
 		var x := rng.randf_range(-55.0, 55.0)
 		var z := rng.randf_range(-55.0, 55.0)
 		var scale := rng.randf_range(0.75, 1.45)
@@ -111,7 +119,7 @@ func _build_wildlands(chunk: Node3D, rng: RandomNumberGenerator) -> void:
 		crown.position.y = trunk_height * 0.5 + 1.2 * scale
 		crown.material_override = _material(Color(0.08, rng.randf_range(0.28, 0.42), 0.14))
 		tree.add_child(crown)
-	for i in range(12):
+	for i in range(maxi(4, roundi(12.0 * density_multiplier))):
 		var rock_size := rng.randf_range(1.5, 4.0)
 		var rock := _add_box(chunk, "Rock_%02d" % i, Vector3(rng.randf_range(-55, 55), rock_size * 0.35, rng.randf_range(-55, 55)), Vector3(rock_size * 1.5, rock_size * 0.7, rock_size), Color(0.32, 0.36, 0.31))
 		rock.rotation.y = rng.randf_range(0.0, TAU)
@@ -145,7 +153,7 @@ func _build_reality_zone(chunk: Node3D, rng: RandomNumberGenerator) -> void:
 		_add_visual_box(chunk, "PylonLight_%02d" % i, Vector3(x, height + 0.15, z), Vector3(2.0, 0.35, 2.0), glow)
 
 	# A few floating platforms reward experimenting with gravity flipping.
-	for i in range(3):
+	for i in range(maxi(1, roundi(3.0 * density_multiplier))):
 		var x := rng.randf_range(-42.0, 42.0)
 		var z := rng.randf_range(-42.0, 42.0)
 		_add_box(chunk, "FloatingPlatform_%02d" % i, Vector3(x, rng.randf_range(9.0, 16.0), z), Vector3(9.0, 1.0, 9.0), Color(0.12, 0.22, 0.34))
