@@ -1,54 +1,47 @@
 # REALITY BREAKER
 
-A lightweight first-person 3D gravity-puzzle prototype built with **Godot 4.3**.
+A first-person 3D exploration game built with **Godot 4.3**, featuring gravity flipping and a procedural world.
 
-## Current prototype
-- First-person movement and look
-- Jumping and gravity flipping between floor and ceiling
-- A small test chamber with a floor, ceiling, and walls
-- A browser build workflow for testing in Safari, Chrome, or desktop browsers
+## Open-world prototype
+
+The game now generates connected world regions as you explore:
+- **Neon City** — streets, buildings, and glowing rooftop markers.
+- **Wildlands** — trees, rocks, and green open terrain.
+- **Reality Zone** — sci-fi pylons, glowing markers, and floating platforms to explore using gravity flipping.
+- **Streaming world chunks** — nearby sections load as you travel and distant sections are removed, allowing the procedural world to continue beyond the starting area.
+- **First-person movement** — keyboard and mouse on desktop, touch controls in mobile browsers.
+- **Gravity flipping** — walk between floor and ceiling and experiment with elevated platforms.
+
+The world is generated from chunk coordinates, so sections can be recreated consistently as you revisit them. This is an early procedural prototype: it does not yet include missions, NPCs, traffic, saving, or multiplayer.
 
 ## Play on iPhone (free browser build)
+
 1. Open the repository's **Actions** tab.
-2. Select **Build browser version** and tap **Run workflow** if a build has not started automatically.
-3. Wait for the workflow to finish and open the deployed GitHub Pages URL from the workflow's deployment/environment link.
+2. Select **Build browser version** and wait for the latest run to finish.
+3. Open the deployed GitHub Pages URL from the workflow's deployment/environment link.
+4. If the game looks cached, reload the page after deployment finishes.
 
-The Web build is a work in progress. Touch controls are now included for mobile browsers: use the left-side directional buttons (or drag on the left side to move), drag on the right side to look around, and use **JUMP** and **FLIP GRAVITY** on the right. Desktop keyboard/mouse controls remain available. iOS native export is a separate experimental workflow and is not required for browser testing.
-
-## Run it on a computer
-1. Install Godot 4.3 from https://godotengine.org/download/
-2. Download or clone this repository.
-3. Import `project.godot` in Godot.
-4. Press **F5** to run the project.
-
-## Controls
-### Phones and tablets
+### Phone controls
 - **Arrow buttons** or drag on the left side — move
 - **Drag on the right side** — look around
 - **JUMP** — jump
 - **FLIP GRAVITY** — switch between floor and ceiling
 
-### Desktop
+### Desktop controls
 - **W A S D** — move
 - **Mouse** — look around
 - **Space** — jump
 - **G** — flip gravity
 - **Esc** — release the mouse
 
-## Multiplayer direction: player-hosted rooms
-The planned multiplayer model is **listen-server / player-hosted**: the player who creates a room runs the match. This avoids paying for a dedicated game server for every match.
+## Run it on a computer
 
-Important design notes:
-- The host must keep the game open while the room is running.
-- Hosting from a home network may require NAT traversal or a relay; a room code alone does not make direct connections possible.
-- A small matchmaking/signalling service or relay may still be needed for reliable internet connections, and free tiers can have limits.
-- The host should be authoritative for important game state so clients cannot freely decide puzzle outcomes.
-- Multiplayer is planned, not implemented yet. The current prototype is single-player.
+1. Install Godot 4.3 from https://godotengine.org/download/
+2. Download or clone this repository.
+3. Import `project.godot` in Godot.
+4. Press **F5** to run the project.
 
-See [the multiplayer design notes](docs/multiplayer-design.md).
+## Current limitations and next steps
 
-## Roadmap
-1. Reliable single-player room and gravity puzzle
-2. Browser and Windows builds
-3. Touch controls for phones and tablets
-4. Player-hosted private multiplayer rooms
+This is a single-player prototype. World generation uses simple primitive geometry to stay lightweight and does not yet include detailed terrain sculpting, buildings you can enter, vehicles, quests, NPCs, persistence, or multiplayer. The browser export is built by GitHub Actions; wait for the build and deployment jobs to succeed before testing the latest changes.
+
