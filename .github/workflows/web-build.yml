@@ -57,6 +57,19 @@ jobs:
           mkdir -p build/web
           godot --headless --path . --export-release "Web" build/web/index.html
 
+      - name: Export Windows desktop build
+        run: |
+          mkdir -p build/windows
+          godot --headless --path . --export-release "Windows Desktop" build/windows/RealityBreaker.exe
+
+      - name: Keep Windows desktop artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: reality-breaker-windows
+          path: build/windows/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Keep Web export artifact
         uses: actions/upload-artifact@v4
         with:
