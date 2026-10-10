@@ -31,6 +31,14 @@ jobs:
       - name: Import project and check scripts
         run: godot --headless --editor --path . --quit
 
+      - name: Install Godot Web export templates
+        run: |
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.3.stable"
+          wget -q "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz" -O /tmp/godot-templates.tpz
+          mkdir -p /tmp/godot-templates
+          unzip -q /tmp/godot-templates.tpz -d /tmp/godot-templates
+          cp /tmp/godot-templates/templates/* "$HOME/.local/share/godot/export_templates/4.3.stable/"
+
       - name: Export Web build
         run: |
           mkdir -p build/web
