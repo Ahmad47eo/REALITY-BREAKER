@@ -22,7 +22,7 @@ var touch_buttons: Dictionary = {}
 
 func _ready() -> void:
 	up_direction = Vector3.UP
-	mobile_controls_enabled = DisplayServer.is_touchscreen_available() or OS.has_feature("web")
+	mobile_controls_enabled = OS.get_name() == "Web" or DisplayServer.is_touchscreen_available() or OS.has_feature("web")
 	if not mobile_controls_enabled:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_update_hud()
@@ -100,7 +100,7 @@ func _create_mobile_controls() -> void:
 	mobile_hud.add_child(root)
 
 	mobile_hint = Label.new()
-	mobile_hint.text = "LEFT: MOVE   •   RIGHT: LOOK"
+	mobile_hint.text = "MOBILE CONTROLS ACTIVE  •  DRAG TO MOVE / LOOK"
 	mobile_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	mobile_hint.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	mobile_hint.anchor_left = 0.25
