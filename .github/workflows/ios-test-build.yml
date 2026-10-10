@@ -1,0 +1,57 @@
+name: iOS testing export
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "project.godot"
+      - "export_presets.cfg"
+      - "scenes/**"
+      - "scripts/**"
+      - ".github/workflows/ios-test-build.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  export-ios-project:
+    runs-on: macos-14
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Download Godot 4.3 and iOS export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 \
+            "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_macos.universal.zip" \
+            -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          APP_PATH="$(find "$RUNNER_TEMP/godot" -maxdepth 2 -name 'Godot.app' -print -quit)"
+          test -n "$APP_PATH"
+          sudo ditto "$APP_PATH" /Applications/Godot.app
+          curl -fL --retry 3 \
+            "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz" \
+            -o "$RUNNER_TEMP/templates.tpz"
+          mkdir -p "$RUNNER_TEMP/templates"
+          unzip -q "$RUNNER_TEMP/templates.tpz" -d "$RUNNER_TEMP/templates"
+          TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/4.3.stable"
+          mkdir -p "$TEMPLATE_DIR"
+          ditto "$RUNNER_TEMP/templates/templates" "$TEMPLATE_DIR"
+
+      - name: Import project and check scripts
+        run: /Applications/Godot.app/Contents/MacOS/Godot --headless --editor --path . --quit
+
+      - name: Export iOS Xcode project for testing
+        run: |
+          mkdir -p build/ios
+          /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --export-debug "iOS Testing" build/ios/RealityBreaker.xcodeproj
+
+      - name: Upload unsigned iOS testing project
+        uses: actions/upload-artifact@v4
+        with:
+          name: reality-breaker-ios-testing-xcode-project
+          path: build/ios/
+          if-no-files-found: error
+          retention-days: 7
