@@ -1,0 +1,65 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
+
+[sub_resource type="StandardMaterial3D" id="Material_floor"]
+albedo_color = Color(0.10, 0.14, 0.22, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Material_wall"]
+albedo_color = Color(0.18, 0.22, 0.32, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_room"]
+size = Vector3(20, 1, 20)
+material = SubResource("Material_floor")
+
+[sub_resource type="BoxShape3D" id="BoxShape_room"]
+size = Vector3(20, 1, 20)
+
+[sub_resource type="CapsuleShape3D" id="Capsule_player"]
+radius = 0.38
+height = 1.8
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_world")
+
+[node name="Floor" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("BoxMesh_room")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("BoxShape_room")
+
+[node name="Ceiling" type="StaticBody3D" parent="."]
+position = Vector3(0, 8.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ceiling"]
+mesh = SubResource("BoxMesh_room")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ceiling"]
+shape = SubResource("BoxShape_room")
+
+[node name="WallNorth" type="StaticBody3D" parent="."]
+position = Vector3(0, 4, -10)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WallNorth"]
+mesh = SubResource("BoxMesh_room")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallNorth"]
+shape = SubResource("BoxShape_room")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+position = Vector3(0, 1.5, 4)
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("Capsule_player")
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+position = Vector3(0, 0.55, 0)
+current = true
