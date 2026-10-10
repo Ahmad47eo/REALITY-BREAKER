@@ -20,7 +20,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+      - name: Import project and parse scripts
+        run: godot --headless --editor --path . --quit
+      - name: Launch prototype headlessly
+        run: godot --headless --path . --quit-after 10
+
   build:
+    needs: validate
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.3
