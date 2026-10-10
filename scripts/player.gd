@@ -87,10 +87,9 @@ func _set_touch_action(action: String, active: bool) -> void:
 		Input.action_release(action)
 
 func _create_mobile_controls() -> void:
-	mobile_hud = CanvasLayer.new()
-	mobile_hud.name = "MobileControls"
-	mobile_hud.layer = 10 # Keep touch controls above the regular HUD.
-	add_child(mobile_hud)
+	# Put controls inside the scene's existing HUD CanvasLayer. This avoids
+	# relying on a CanvasLayer nested beneath the 3D player node.
+	mobile_hud = get_node("../HUD") as CanvasLayer
 
 	var root := Control.new()
 	root.name = "TouchOverlay"
