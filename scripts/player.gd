@@ -89,12 +89,14 @@ func _set_touch_action(action: String, active: bool) -> void:
 func _create_mobile_controls() -> void:
 	mobile_hud = CanvasLayer.new()
 	mobile_hud.name = "MobileControls"
+	mobile_hud.layer = 10 # Keep touch controls above the regular HUD.
 	add_child(mobile_hud)
 
 	var root := Control.new()
 	root.name = "TouchOverlay"
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.z_index = 100
 	mobile_hud.add_child(root)
 
 	mobile_hint = Label.new()
