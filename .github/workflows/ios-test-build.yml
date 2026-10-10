@@ -46,7 +46,7 @@ jobs:
       - name: Export iOS Xcode project for testing
         run: |
           mkdir -p build/ios
-          /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --export-debug "iOS Testing" build/ios/RealityBreaker.xcodeproj
+          /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --export-debug "iOS Testing" build/ios/RealityBreaker
 
       - name: Upload unsigned iOS testing project
         uses: actions/upload-artifact@v4
