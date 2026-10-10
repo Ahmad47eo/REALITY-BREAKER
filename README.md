@@ -13,7 +13,7 @@ A lightweight first-person 3D gravity-puzzle prototype built with **Godot 4.3**.
 2. Select **Build browser version** and tap **Run workflow** if a build has not started automatically.
 3. Wait for the workflow to finish and open the deployed GitHub Pages URL from the workflow's deployment/environment link.
 
-The Web build is a work in progress. The current prototype uses keyboard/mouse controls, so mobile touch controls still need to be added before it feels good on an iPhone. iOS native export is a separate experimental workflow and is not required for the browser build.
+The Web build is a work in progress. Touch controls are now included for mobile browsers: use the left-side directional buttons (or drag on the left side to move), drag on the right side to look around, and use **JUMP** and **FLIP GRAVITY** on the right. Desktop keyboard/mouse controls remain available. iOS native export is a separate experimental workflow and is not required for browser testing.
 
 ## Run it on a computer
 1. Install Godot 4.3 from https://godotengine.org/download/
@@ -21,7 +21,14 @@ The Web build is a work in progress. The current prototype uses keyboard/mouse c
 3. Import `project.godot` in Godot.
 4. Press **F5** to run the project.
 
-## Desktop controls
+## Controls
+### Phones and tablets
+- **Arrow buttons** or drag on the left side — move
+- **Drag on the right side** — look around
+- **JUMP** — jump
+- **FLIP GRAVITY** — switch between floor and ceiling
+
+### Desktop
 - **W A S D** — move
 - **Mouse** — look around
 - **Space** — jump
