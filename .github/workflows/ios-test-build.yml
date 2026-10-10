@@ -43,6 +43,16 @@ jobs:
       - name: Import project and check scripts
         run: /Applications/Godot.app/Contents/MacOS/Godot --headless --editor --path . --quit
 
+      - name: Prepare unsigned export without Apple signing credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Godot 4.3 requires a non-empty Team ID to generate the iOS Xcode project.
+          # This placeholder is only for unsigned project generation; it is not an Apple Team ID
+          # and cannot sign or install the app. Never use it for distribution.
+          sed -i '' 's/application\/app_store_team_id=""/application\/app_store_team_id="0000000000"/' export_presets.cfg
+          grep -q 'application\/app_store_team_id="0000000000"' export_presets.cfg
+
       - name: Export iOS Xcode project for testing
         run: |
           mkdir -p build/ios
