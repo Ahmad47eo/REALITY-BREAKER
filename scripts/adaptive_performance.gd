@@ -16,7 +16,7 @@ var detected_os: String = "Unknown OS"
 @onready var quality_label: Label = get_node_or_null("../HUD/QualityInfo") as Label
 
 func _ready() -> void:
-	_detect_and_apply()
+	call_deferred("_detect_and_apply")
 
 func _detect_and_apply() -> void:
 	detected_os = OS.get_name()
@@ -69,7 +69,9 @@ func _get_system_ram_gb() -> float:
 	# Some browser targets do not expose it; zero means unknown, not zero RAM.
 	if OS.get_name() == "Web":
 		return 0.0
-	var memory_info: Dictionary = OS.get_memory_info()
+	if not OS.has_method("get_memory_info"):
+		return 0.0
+	var memory_info: Dictionary = OS.call("get_memory_info")
 	var physical_bytes: int = int(memory_info.get("physical", 0))
 	if physical_bytes <= 0:
 		physical_bytes = int(memory_info.get("total", 0))
